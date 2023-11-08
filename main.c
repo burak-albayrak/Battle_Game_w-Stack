@@ -90,8 +90,9 @@ int main() {
     while (fgets(line, sizeof(line), file)) {
         if (strncmp(line, "A", 1) == 0) {
             int side;
-            int result = sscanf(line, "A %d", &side);
-            if (result != 1) {
+            char data[256];
+            int result = sscanf(line, "A %d %s", &side, data);
+            if (result != 2) {
                 // Print an error message if the command format is invalid and continue to the next line.
                 printf("Invalid command format.\n");
                 continue;
@@ -101,19 +102,15 @@ int main() {
             printf("add soldiers to side %d\n", side);
 
             // Extract soldier data from the line and add them to the corresponding side's stack.
-            char *data = strchr(line, ';');
-            if (data != NULL) {
-                data++;
-                char *token = strtok(data, ";");
-                while (token != NULL) {
-                    int h, s;
-                    sscanf(token, "%d,%d", &h, &s);
-                    struct Soldier newSoldier = {h, s};
-                    push(side == 1 ? side1 : side2, newSoldier);
-                    // Print the health and strength of each added soldier.
-                    printf("S- H: %d S: %d\n", h, s);
-                    token = strtok(NULL, ";");
-                }
+            char *token = strtok(data, ";");
+            while (token != NULL) {
+                int h, s;
+                sscanf(token, "%d,%d", &h, &s);
+                struct Soldier newSoldier = {h, s};
+                push(side == 1 ? side1 : side2, newSoldier);
+                // Print the health and strength of each added soldier.
+                printf("S- H: %d S: %d\n", h, s);
+                token = strtok(NULL, ";");
             }
         } else if (strncmp(line, "F", 1) == 0) {
             if (turn == 1) {

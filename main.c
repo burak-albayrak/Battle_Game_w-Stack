@@ -72,8 +72,6 @@ int main() {
     struct Stack *side1 = createStack(10);
     struct Stack *side2 = createStack(10);
 
-
-
     // Open the "commands.txt" file for reading.
     FILE *file = fopen("commands.txt", "r");
     if (file == NULL) {
@@ -113,6 +111,15 @@ int main() {
                 token = strtok(NULL, ";");
             }
         } else if (strncmp(line, "F", 1) == 0) {
+            // Check if any side has no soldiers remaining and continue the game
+            if (side1->size == 0) {
+                printf("Side 2 wins! Side 1 has no soldiers remaining.\n");
+                break; // Exit the game loop
+            } else if (side2->size == 0) {
+                printf("Side 1 wins! Side 2 has no soldiers remaining.\n");
+                break; // Exit the game loop
+            }
+            // Battle process between sides
             if (turn == 1) {
                 battle(side1, side2, &turn);
             } else {
@@ -140,6 +147,15 @@ int main() {
             // Print the health and strength of the added soldier.
             printf("S- H: %d S: %d\n", random_health, random_strength);
         } else if (strncmp(line, "C", 1) == 0) {
+            // Check if any side has no soldiers remaining and continue the game
+            if (side1->size == 0) {
+                printf("Side 2 wins! Side 1 has no soldiers remaining.\n");
+                break; // Exit the game loop
+            } else if (side2->size == 0) {
+                printf("Side 1 wins! Side 2 has no soldiers remaining.\n");
+                break; // Exit the game loop
+            }
+
             printf("Critical shot\n");
             // Check which side to target and perform the critical hit.
             if (turn == 1) {
@@ -159,6 +175,7 @@ int main() {
             }
         }
     }
+
 
     // Close the file.
     fclose(file);
